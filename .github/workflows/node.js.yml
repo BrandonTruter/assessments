@@ -9,11 +9,6 @@ on:
   pull_request:
     branches: [ "main" ]
 
-# Needed for nx-set-shas when run on the main branch
-permissions:
-  actions: read
-  contents: read
-
 jobs:
   build:
 
@@ -35,6 +30,3 @@ jobs:
     - run: npm run build --if-present
     - run: npm test
 
-    - uses: nrwl/nx-set-shas@v4
-    - run: npx nx-cloud record -- nx format:check
-    - run: npx nx affected -t lint test build e2e-ci

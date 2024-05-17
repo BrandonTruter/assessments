@@ -22,7 +22,9 @@
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "vitest": "^1.6.0",
-    "zone.js": "~0.14.3"
+    "zone.js": "~0.14.3",
+    "@nativescript/core": "~8.6.0",
+    "@nativescript/theme": "~1.0.4"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~17.3.0",
@@ -34,6 +36,7 @@
     "@angular/cli": "~17.3.0",
     "@angular/compiler-cli": "~17.3.0",
     "@angular/language-service": "~17.3.0",
+    "@nativescript/nx": "^18.0.0",
     "@nx/devkit": "19.0.4",
     "@nx/eslint": "19.0.4",
     "@nx/eslint-plugin": "19.0.4",
@@ -63,7 +66,8 @@
     "prettier": "^2.6.2",
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
-    "typescript": "~5.4.2"
+    "typescript": "~5.4.2",
+    "@nativescript/types": "~8.6.0"
   },
   "nx": {
     "includedScripts": []

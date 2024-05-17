@@ -1,35 +1,36 @@
-name: Deploy to GitHub Pages via angular-cli-ghpages
+name: deploy
+
 on:
   push:
     branches:
-    - master
-    - release
+      - main
+  pull_request:
+
+permissions:
+  actions: read
+  contents: read
 
 jobs:
-  build-and-deploy:
+  main:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [16.x]
-
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: Prepare and deploy
-      env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}
-      run: |
-        npm install
-        ###
-        # Configure Angular first!
-        ####
-        # npm test -- --watch=false --progress=false --browsers=ChromeHeadlessCI
-        # npm run webdriver-update-ci
-        # npm run e2e -- --protractor-config=e2e/protractor-ci.conf.js --webdriver-update=false
-        ####
-        npm run ng -- deploy --base-href=https://github.com/BrandonTruter/assessments/tree/main/apps/tic-tac-toe/ --name="BrandonTruter" --email=brandonleetruter@gmail.com
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Connect your workspace on nx.app and uncomment this to enable task distribution.
+      # The "--stop-agents-after" is optional, but allows idle agents to shut down once the "e2e-ci" targets have been requested
+      - run: npx nx-cloud start-ci-run --distribute-on="5 linux-medium-js" --stop-agents-after="e2e-ci"
+
+      # Cache node_modules
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci
+      - uses: nrwl/nx-set-shas@v4
+
+      # Prepend any command with "nx-cloud record --" to record its logs to Nx Cloud
+      # - run: npx nx-cloud record -- echo Hello World
+      - run: npx nx affected -t lint test build
+      - run: npx nx affected --parallel 1 -t e2e-ci
